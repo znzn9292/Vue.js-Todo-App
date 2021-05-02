@@ -6,14 +6,16 @@
 export default {
     data () {
         return {
-            msg: 'Hello Vue!'
+            msg: 'Hello Vue?'
         }
     }
 }
 </script>
 
-<style>
+<style scoped lang="scss">
+$color: blue;
 h1 {
-    color: red;
+    color: $color;
+    display: flex;
 }
 </style>
