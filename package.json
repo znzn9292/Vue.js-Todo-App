@@ -1,7 +1,11 @@
 {
   "name": "vue-todo-app-prj",
   "version": "1.0.0",
-  "description": "",
+  "description": "Vue Todo App!!",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/znzn9292"
+  },
   "main": "index.js",
   "scripts": {
     "dev": "webpack-dev-server --mode development",

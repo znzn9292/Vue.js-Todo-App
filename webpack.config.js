@@ -9,7 +9,12 @@ require('@babel/polyfill')
 
 module.exports = (env, opts) => {
     const config = {
-        // 중복되는 옵션 (개발용과 운영용)
+        resolve: {
+            extensions: [
+                '.vue',
+                '.js'
+            ]
+        },
         entry: {
             app: [
                 '@babel/polyfill',
