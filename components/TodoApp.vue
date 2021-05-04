@@ -1,13 +1,25 @@
 <template>
     <div>
-        <todo-item />
-        <todo-creator />
+        <todo-item 
+            v-for="todo in todos"
+            :key="todo.id"
+            :todo="todo"
+            @update-todo="updateTodo"
+            @delete-todo="deleteTodo"
+        />
+
+        <hr>
+        <todo-creator @create-todo="createTodo" />
     </div>
 </template>
 
 <script>
 import lowdb from 'lowdb'
 import LocalStorage from 'lowdb/adapters/LocalStorage'
+import cryptoRandomString from 'crypto-random-string'
+import _cloneDeep from 'lodash/cloneDeep'
+import _find from 'lodash/find'
+import _assing from 'lodash/assign'
 import TodoCreator from './TodoCreator'
 import TodoItem from './TodoItem'
 
@@ -18,7 +30,8 @@ export default {
     },
     data () {
         return {
-            db: null
+            db: null,
+            todos: []
         }
     },
     created () {
@@ -26,14 +39,49 @@ export default {
     },
     methods: {
         initDB () {
-            const adapter = new LocalStorage('todo-app')
+            const adapter = new LocalStorage('todo-app')    // 'todo-app' 이라는  local storage 생성
             this.db = lowdb(adapter)
 
-            // Local DB 초기화
-            this.db.defaults({
-                todos: []   // Collection
-            })
-            .write()
+            const hasTodos = this.db.has('todos').value()
+            if(hasTodos) {
+                console.log(this.db)
+                this.todos = _cloneDeep(this.db.getState().todos)
+            } else {
+                // Local DB 초기화
+                this.db.defaults({
+                    todos: []   // Collection
+                })
+                .write()
+                }
+        },
+        createTodo (title) {
+            const newTodo = {
+                id: cryptoRandomString({ length: 10 }),
+                title,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                done: false
+            }
+
+            this.db
+              .get('todos')
+              .push(newTodo)
+              .write()
+
+            this.todos.push(newTodo)
+        },
+        updateTodo (todo, value) {
+            this.db
+              .get('todos')
+              .find({ id: todo.id })
+              .assign(value)
+              .write()
+
+            const foundTodo = _find(this.todos, { id: todo.id })
+            _assing(foundTodo, value)
+        },
+        deleteTodo () {
+            console.log('Delete Todo')
         }
     }
 }
