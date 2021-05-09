@@ -22,6 +22,16 @@
                     완료된 항목 ({{ completedCount }})
                 </button>
             </div>
+
+            <div class="actions">
+                <input 
+                    v-model="allDone"
+                    type="checkbox"
+                >
+                <button @click="clearCompleted">
+                    완료된 항목 삭제 
+                </button>
+            </div>
         </div>
 
         <div class="todo-app__list">
@@ -46,10 +56,11 @@
 import lowdb from 'lowdb'
 import LocalStorage from 'lowdb/adapters/LocalStorage'
 import cryptoRandomString from 'crypto-random-string'
-import _cloneDeep from 'lodash/cloneDeep'
+import _clone from 'lodash/cloneDeep'
 import _find from 'lodash/find'
 import _assing from 'lodash/assign'
 import _findIndex from 'lodash/findIndex'
+import _forEachRight from 'lodash/forEachRight'
 import TodoCreator from './TodoCreator'
 import TodoItem from './TodoItem'
 
@@ -85,7 +96,16 @@ export default {
         },
         completedCount () {
             return this.total - this.activeCount
+        },
+        allDone: {
+            get () {
+                return this.total === this.completedCount && this.total > 0
+            },
+            set (checked) {
+                this.completeAll(checked)
+            }
         }
+    
     },
     created () {
         this.initDB()
@@ -98,7 +118,7 @@ export default {
             const hasTodos = this.db.has('todos').value()
             if(hasTodos) {
                 console.log(this.db)
-                this.todos = _cloneDeep(this.db.getState().todos)
+                this.todos = _clone(this.db.getState().todos)
             } else {
                 // Local DB 초기화
                 this.db.defaults({
@@ -144,6 +164,47 @@ export default {
         },
         changeFilter (filter) {
             this.filter = filter
+        },
+        completeAll (checked) {
+            const newTodos = this.db
+              .get('todos')
+              .forEach(todo => {
+                  todo.done = checked
+              })
+              .write()
+
+            // this.todos.forEach(todo => {
+            //     todo.done = checked
+            // })
+
+            this.todos = _clone(newTodos)
+        },
+        clearCompleted () {
+            // this.todos.forEach(todo => {
+            //     if(todo.done) {
+            //         this.deleteTodo(todo)
+            //     }
+            // })
+
+            // native Script 방법
+            // this.todos
+            //   .reduce((list, todo, index) => {
+            //       if(todo.done) {
+            //           list.push(index)
+            //       }
+            //       return list
+            //   }, [])
+            //   .reverse()
+            //   .forEach(index => {
+            //       this.deleteTodo(this.todos[index])
+            //   })
+
+            // Lodash Library 방법
+            _forEachRight(this.todos, todo => {
+                if(todo.done) {
+                    this.deleteTodo(todo)
+                }
+            })
         }
     }
 }
