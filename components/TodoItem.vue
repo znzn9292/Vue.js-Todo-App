@@ -18,11 +18,18 @@
             >
             <div class="item__actions">
                 <button 
+                    class="btn btn--primary"
                     key = "complete"
-                    @click="editedTodo">완료</button>
+                    @click="editedTodo">
+                    <span class="material-icons">done</span>
+                </button>
                 <button 
                     key = "cancel"
-                    @click="offEditMode">취소</button>
+                    @click="offEditMode">
+                    <!-- <i class="material-icons">clear</i> -->
+                    <!-- <span class="material-icons">clear</span> -->
+                    <span class="material-icons">backspace</span>
+                </button>
             </div>
 
         </div>
@@ -31,10 +38,13 @@
             class="item__inner item--normal"
             >
 
-            <input 
-                v-model="done"
-                type="checkbox"
-            />
+            <label>
+                <input 
+                    v-model="done"
+                    type="checkbox"
+                />
+                <span class=icon><span class="material-icons">check</span></span>
+            </label>
 
             <div class="item__title-wrap">
                 <div class="item__title">
@@ -45,12 +55,19 @@
                 </div>
             </div>
             <div class="item__actions">
-                <button 
+                <button
+                    class="btn" 
                     key = "update" 
-                    @click="onEditMode">수정</button>
+                    @click="onEditMode">
+                    <i class="material-icons">edit</i>
+                </button>
                 <button 
+                    class="btn btn--danger"
                     key = "delete"
-                    @click="deleteTodo">삭제</button>
+                    @click="deleteTodo">
+                    <!-- <i class="material-icons">delete</i> -->
+                    <span class="material-icons">delete_forever</span>
+                </button>
             </div>
         </div>
 
@@ -126,20 +143,3 @@ export default {
     }
 }
 </script>
-
-<style scoped lang="scss">
-    .todo-item {
-        margin-bottom: 10px;
-        .item__inner {
-            display: flex;
-        }
-        .item__date {
-            font-size: 12px;
-        }
-        &.done {
-            .item__title {
-                text-decoration: line-through;
-            }
-        }
-    }
-</style>

@@ -1,6 +1,8 @@
 <template>
     <div>
-        <button @click="createTodo">추가</button>
+        <button @click="createTodo">
+            <span class="material-icons">add</span>
+        </button>
         <input 
             :value="title"
             :placeholder="placeholder"
@@ -34,6 +36,11 @@ export default {
             // $emit: 부모 컴포넌트에게 특정한 이벤트를 올림
             this.$emit('create-todo', this.title)
             this.title = ''
+
+            // 
+            this.$nextTick(() => {
+                window.scrollTo(0, document.body.scrollHeight)
+            })
         }
     }
 }
