@@ -23,14 +23,35 @@
                 </button>
             </div>
 
-            <div class="actions">
-                <input 
-                    v-model="allDone"
-                    type="checkbox"
-                >
-                <button @click="clearCompleted">
-                    완료된 항목 삭제 
-                </button>
+            <div class="actions clearfix">
+                <div class="float--left">
+                    <label>
+                        <input 
+                            v-model="allDone"
+                            type="checkbox"
+                        >
+                        <span class="icon"><span class="material-icons">done_all</span></span>
+                    </label>
+                </div>
+                <div class="float--right clearfix">
+                    <button 
+                        class="btn float--left"
+                        @click="scrollToTop">
+                        <span class="material-icons">expand_less</span>
+                    </button>
+
+                    <button 
+                        class="btn float--left"
+                        @click="scrollToBottom">
+                        <span class="material-icons">expand_more</span>
+                    </button>
+
+                    <button 
+                        class="btn btn-danger"
+                        @click="clearCompleted">
+                        <span class="material-icons">delete_sweep</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -44,7 +65,6 @@
             />
         </div>
 
-        <hr>
         <todo-creator 
             class="todo-app__creator"
             @create-todo="createTodo" 
