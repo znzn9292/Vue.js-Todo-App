@@ -19,11 +19,17 @@ const routes = [
     },
     {
         path: '/todos',
-        component: TodoApp
+        redirect: '/todos/all',
+        component: TodoApp,
+        children: [
+            {
+                path: ':id'
+            }
+        ]
     }
 ]
 
 export default new VueRouter({
-    mode: 'history',
+    // mode: 'history',
     routes
 })
